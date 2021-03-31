@@ -1,9 +1,9 @@
-﻿namespace SnakeGame.Models
+﻿using System.Drawing;
+
+namespace SnakeGame.Models
 {
-    public class SnakePiece
+    public class SnakePiece : Point
     {
-        public int X { get; set; }
-        public int Y { get; set; }
         public bool IsHead { get; set; }
 
         public SnakePiece()
@@ -23,6 +23,11 @@
         {
             X = x;
             Y = y;
+        }
+
+        public Color GetSnakePieceColor()
+        {
+            return IsHead ? Color.Black : Color.Green;
         }
     }
 }

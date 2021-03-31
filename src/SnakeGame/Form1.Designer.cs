@@ -41,10 +41,10 @@ namespace SnakeGame
             this.gameBox.BackColor = System.Drawing.SystemColors.ActiveBorder;
             this.gameBox.Location = new System.Drawing.Point(12, 12);
             this.gameBox.Name = "gameBox";
-            this.gameBox.Size = new System.Drawing.Size(492, 411);
+            this.gameBox.Size = new System.Drawing.Size(500, 500);
             this.gameBox.TabIndex = 0;
             this.gameBox.TabStop = false;
-            this.gameBox.Paint += new System.Windows.Forms.PaintEventHandler(this.gameBox_Paint);
+            this.gameBox.Paint += new System.Windows.Forms.PaintEventHandler(this.GameBox_Paint);
             // 
             // label1
             // 
@@ -59,7 +59,7 @@ namespace SnakeGame
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(800, 530);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.gameBox);
             this.Name = "Form1";

@@ -53,10 +53,15 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\Food.cs" />
+    <Compile Include="Models\Point.cs" />
     <Compile Include="Models\Settings.cs" />
+    <Compile Include="Models\Snake.cs" />
     <Compile Include="Models\SnakePiece.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\GameEngine.cs" />
+    <Compile Include="Services\GraphicsEngine.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
