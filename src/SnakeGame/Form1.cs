@@ -24,32 +24,6 @@ namespace SnakeGame
             LoadSnakeImage();
         }
 
-        private void LoadSnakeImage()
-        {
-            string directory = Directory.GetCurrentDirectory();
-            string imagePath = directory + "\\Images\\snake.png";
-            if (File.Exists(imagePath))
-            {
-                pictureBoxSnakeImage.Image = Image.FromFile(imagePath);
-                pictureBoxSnakeImage.SizeMode = PictureBoxSizeMode.StretchImage;
-            }
-            else
-            {
-                pictureBoxSnakeImage.Hide();
-            }
-        }
-
-        private void StartNewGame()
-        {
-            _snake = new Snake();
-            _settings = new Settings();
-            labelScore.Text = _settings.Score.ToString();
-
-            AddNewFoodInARandomPlace();
-
-            gameTimer.Start();
-        }
-
         private void GameBox_Paint(object sender, PaintEventArgs e)
         {
             GraphicsEngine.DrawFood(e, _food, _settings);
@@ -93,9 +67,35 @@ namespace SnakeGame
             }
         }
 
+        private void LoadSnakeImage()
+        {
+            string directory = Directory.GetCurrentDirectory();
+            string imagePath = directory + "\\Images\\snake.png";
+            if (File.Exists(imagePath))
+            {
+                pictureBoxSnakeImage.Image = Image.FromFile(imagePath);
+                pictureBoxSnakeImage.SizeMode = PictureBoxSizeMode.StretchImage;
+            }
+            else
+            {
+                pictureBoxSnakeImage.Hide();
+            }
+        }
+
+        private void StartNewGame()
+        {
+            _snake = new Snake();
+            _settings = new Settings();
+            labelScore.Text = _settings.Score.ToString();
+
+            AddNewFoodInARandomPlace();
+
+            gameTimer.Start();
+        }
+
         private void InstantiateGameTimer()
         {
-            gameTimer.Interval = 1000 / 7; // Changing the game time to settings speed
+            gameTimer.Interval = (int)TimeSpan.FromMilliseconds(200).TotalMilliseconds; // Changing the game time to settings speed
             gameTimer.Tick += UpdateScreen; // linking a updateScreen function to the timer
         }
 
