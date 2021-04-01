@@ -35,7 +35,9 @@ namespace SnakeGame
             this.label1 = new System.Windows.Forms.Label();
             this.labelScore = new System.Windows.Forms.Label();
             this.buttonStartNewGame = new System.Windows.Forms.Button();
+            this.pictureBoxSnakeImage = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.gameBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSnakeImage)).BeginInit();
             this.SuspendLayout();
             // 
             // gameBox
@@ -43,7 +45,7 @@ namespace SnakeGame
             this.gameBox.BackColor = System.Drawing.SystemColors.ActiveBorder;
             this.gameBox.Location = new System.Drawing.Point(12, 12);
             this.gameBox.Name = "gameBox";
-            this.gameBox.Size = new System.Drawing.Size(500, 500);
+            this.gameBox.Size = new System.Drawing.Size(500, 350);
             this.gameBox.TabIndex = 0;
             this.gameBox.TabStop = false;
             this.gameBox.Paint += new System.Windows.Forms.PaintEventHandler(this.GameBox_Paint);
@@ -79,19 +81,29 @@ namespace SnakeGame
             this.buttonStartNewGame.UseVisualStyleBackColor = true;
             this.buttonStartNewGame.Click += new System.EventHandler(this.ButtonStartNewGame_Click);
             // 
+            // pictureBoxSnakeImage
+            // 
+            this.pictureBoxSnakeImage.Location = new System.Drawing.Point(525, 135);
+            this.pictureBoxSnakeImage.Name = "pictureBoxSnakeImage";
+            this.pictureBoxSnakeImage.Size = new System.Drawing.Size(263, 187);
+            this.pictureBoxSnakeImage.TabIndex = 4;
+            this.pictureBoxSnakeImage.TabStop = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 530);
+            this.ClientSize = new System.Drawing.Size(800, 381);
+            this.Controls.Add(this.pictureBoxSnakeImage);
             this.Controls.Add(this.buttonStartNewGame);
             this.Controls.Add(this.labelScore);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.gameBox);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Snake Game";
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyUp);
             ((System.ComponentModel.ISupportInitialize)(this.gameBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSnakeImage)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -104,6 +116,7 @@ namespace SnakeGame
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label labelScore;
         private System.Windows.Forms.Button buttonStartNewGame;
+        private System.Windows.Forms.PictureBox pictureBoxSnakeImage;
     }
 }
 

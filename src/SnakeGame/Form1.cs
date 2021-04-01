@@ -2,9 +2,9 @@
 using SnakeGame.Models;
 using SnakeGame.Services;
 using System;
+using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Media;
 using System.Windows.Forms;
 
 namespace SnakeGame
@@ -20,9 +20,26 @@ namespace SnakeGame
             InitializeComponent();
 
             InstantiateGameTimer();
+
+            LoadSnakeImage();
         }
 
-        public void StartNewGame()
+        private void LoadSnakeImage()
+        {
+            string directory = Directory.GetCurrentDirectory();
+            string imagePath = directory + "\\Images\\snake.png";
+            if (File.Exists(imagePath))
+            {
+                pictureBoxSnakeImage.Image = Image.FromFile(imagePath);
+                pictureBoxSnakeImage.SizeMode = PictureBoxSizeMode.StretchImage;
+            }
+            else
+            {
+                pictureBoxSnakeImage.Hide();
+            }
+        }
+
+        private void StartNewGame()
         {
             _snake = new Snake();
             _settings = new Settings();
@@ -80,7 +97,6 @@ namespace SnakeGame
         {
             gameTimer.Interval = 1000 / 7; // Changing the game time to settings speed
             gameTimer.Tick += UpdateScreen; // linking a updateScreen function to the timer
-            //gameTimer.Start(); // starting the timer
         }
 
         public void UpdateScreen(object sender, EventArgs e)
@@ -168,37 +184,16 @@ namespace SnakeGame
         {
             if (_snake.Head.Equals(_food))
             {
+                SoundsEngine.PlayIncreaseScoreSound();
+
                 AddNewSnakePieceToBodyAfterEat();
                 IncreaseScore();
-                PlayIncreaseScoreSound();
                 AddNewFoodInARandomPlace();
 
                 return true;
             }
 
             return false;
-        }
-
-        public void PlayIncreaseScoreSound()
-        {
-            string directory = Directory.GetCurrentDirectory();
-            string soundPath = directory + "\\Sounds\\game-notification.wav";
-            if (File.Exists(soundPath))
-            {
-                SoundPlayer simpleSound = new SoundPlayer(soundPath);
-                simpleSound.Play();
-            }
-        }
-
-        public void PlayGameOverSound()
-        {
-            string directory = Directory.GetCurrentDirectory();
-            string soundPath = directory + "\\Sounds\\game-over.wav";
-            if (File.Exists(soundPath))
-            {
-                SoundPlayer simpleSound = new SoundPlayer(soundPath);
-                simpleSound.Play();
-            }
         }
 
         /// <summary>
@@ -230,7 +225,7 @@ namespace SnakeGame
             }
         }
 
-        public void IncreaseScore()
+        private void IncreaseScore()
         {
             _settings.Score++;
             labelScore.Text = _settings.Score.ToString();
@@ -239,7 +234,7 @@ namespace SnakeGame
         /// <summary>
         /// Checks for Collision of the snake against the wall or between the snake and itself
         /// </summary>
-        public void DetectCollision()
+        private void DetectCollision()
         {
             bool thereWasCollision = CheckForCollisionAgainstWall() || CheckForCollisionBetweenSnakeAndItself();
             if (thereWasCollision)
@@ -248,20 +243,20 @@ namespace SnakeGame
             }
         }
 
-        public bool CheckForCollisionAgainstWall()
+        private bool CheckForCollisionAgainstWall()
         {
             return _snake.Head.X < 0 || _snake.Head.X >= gameBox.Width || _snake.Head.Y < 0 || _snake.Head.Y >= gameBox.Height;
         }
 
-        public bool CheckForCollisionBetweenSnakeAndItself()
+        private bool CheckForCollisionBetweenSnakeAndItself()
         {
             return _snake.Body.Any(bodyPiece => _snake.Head.X == bodyPiece.X && _snake.Head.Y == bodyPiece.Y);
         }
 
-        public void DisplayGameOverMessageAndStopGame()
+        private void DisplayGameOverMessageAndStopGame()
         {
             gameTimer.Stop();
-            PlayGameOverSound();
+            SoundsEngine.PlayGameOverSound();
 
             const string message = "Do you want to start again?";
             const string title = "Game Over!!!";
