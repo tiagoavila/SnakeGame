@@ -2,7 +2,9 @@
 using SnakeGame.Models;
 using SnakeGame.Services;
 using System;
+using System.IO;
 using System.Linq;
+using System.Media;
 using System.Windows.Forms;
 
 namespace SnakeGame
@@ -17,12 +19,18 @@ namespace SnakeGame
         {
             InitializeComponent();
 
-            _snake = new Snake();
+            InstantiateGameTimer();
+        }
 
+        public void StartNewGame()
+        {
+            _snake = new Snake();
             _settings = new Settings();
+            labelScore.Text = _settings.Score.ToString();
 
             AddNewFoodInARandomPlace();
-            StartGameTimer();
+
+            gameTimer.Start();
         }
 
         private void GameBox_Paint(object sender, PaintEventArgs e)
@@ -31,36 +39,58 @@ namespace SnakeGame
             GraphicsEngine.DrawSnake(e, _snake, _settings);
         }
 
+        private void ButtonStartNewGame_Click(object sender, EventArgs e)
+        {
+            StartNewGame();
+            buttonStartNewGame.Enabled = false;
+        }
+
         private void Form1_KeyUp(object sender, KeyEventArgs e)
         {
             switch (e.KeyCode)
             {
                 case Keys.Up:
-                    _settings.Direction = Directions.Up;
+                    if (_settings.Direction != Directions.Down)
+                    {
+                        _settings.Direction = Directions.Up;
+                    }
                     break;
                 case Keys.Down:
-                    _settings.Direction = Directions.Down;
+                    if (_settings.Direction != Directions.Up)
+                    {
+                        _settings.Direction = Directions.Down;
+                    }
                     break;
                 case Keys.Left:
-                    _settings.Direction = Directions.Left;
+                    if (_settings.Direction != Directions.Right)
+                    {
+                        _settings.Direction = Directions.Left;
+                    }
                     break;
                 case Keys.Right:
-                    _settings.Direction = Directions.Right;
+                    if (_settings.Direction != Directions.Left)
+                    {
+                        _settings.Direction = Directions.Right;
+                    }
                     break;
             }
         }
 
-        private void StartGameTimer()
+        private void InstantiateGameTimer()
         {
             gameTimer.Interval = 1000 / 7; // Changing the game time to settings speed
             gameTimer.Tick += UpdateScreen; // linking a updateScreen function to the timer
-            gameTimer.Start(); // starting the timer
+            //gameTimer.Start(); // starting the timer
         }
 
         public void UpdateScreen(object sender, EventArgs e)
         {
             UpdateSnakePositionBasedOnDirection();
-            CheckIfFoodWasEatenByTheSnake();
+            bool foodWasEaten = CheckIfFoodWasEatenByTheSnake();
+            if (!foodWasEaten)
+            {
+                DetectCollision();
+            }
             gameBox.Invalidate();
         }
 
@@ -134,13 +164,40 @@ namespace SnakeGame
         /// <summary>
         /// If the position of the head of the snake is equals to the position of the food, it adds a new piece to the body of the snake and adds a new food on some random place
         /// </summary>
-        private void CheckIfFoodWasEatenByTheSnake()
+        private bool CheckIfFoodWasEatenByTheSnake()
         {
             if (_snake.Head.Equals(_food))
             {
                 AddNewSnakePieceToBodyAfterEat();
-
+                IncreaseScore();
+                PlayIncreaseScoreSound();
                 AddNewFoodInARandomPlace();
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public void PlayIncreaseScoreSound()
+        {
+            string directory = Directory.GetCurrentDirectory();
+            string soundPath = directory + "\\Sounds\\game-notification.wav";
+            if (File.Exists(soundPath))
+            {
+                SoundPlayer simpleSound = new SoundPlayer(soundPath);
+                simpleSound.Play();
+            }
+        }
+
+        public void PlayGameOverSound()
+        {
+            string directory = Directory.GetCurrentDirectory();
+            string soundPath = directory + "\\Sounds\\game-over.wav";
+            if (File.Exists(soundPath))
+            {
+                SoundPlayer simpleSound = new SoundPlayer(soundPath);
+                simpleSound.Play();
             }
         }
 
@@ -170,6 +227,53 @@ namespace SnakeGame
             if (newBodyPiece != null)
             {
                 _snake.Body.Add(newBodyPiece);
+            }
+        }
+
+        public void IncreaseScore()
+        {
+            _settings.Score++;
+            labelScore.Text = _settings.Score.ToString();
+        }
+
+        /// <summary>
+        /// Checks for Collision of the snake against the wall or between the snake and itself
+        /// </summary>
+        public void DetectCollision()
+        {
+            bool thereWasCollision = CheckForCollisionAgainstWall() || CheckForCollisionBetweenSnakeAndItself();
+            if (thereWasCollision)
+            {
+                DisplayGameOverMessageAndStopGame();
+            }
+        }
+
+        public bool CheckForCollisionAgainstWall()
+        {
+            return _snake.Head.X < 0 || _snake.Head.X >= gameBox.Width || _snake.Head.Y < 0 || _snake.Head.Y >= gameBox.Height;
+        }
+
+        public bool CheckForCollisionBetweenSnakeAndItself()
+        {
+            return _snake.Body.Any(bodyPiece => _snake.Head.X == bodyPiece.X && _snake.Head.Y == bodyPiece.Y);
+        }
+
+        public void DisplayGameOverMessageAndStopGame()
+        {
+            gameTimer.Stop();
+            PlayGameOverSound();
+
+            const string message = "Do you want to start again?";
+            const string title = "Game Over!!!";
+            const MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+            DialogResult result = MessageBox.Show(message, title, buttons);
+            if (result == DialogResult.Yes)
+            {
+                StartNewGame();
+            }
+            else
+            {
+                Close();
             }
         }
     }

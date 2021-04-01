@@ -14,27 +14,33 @@ namespace SnakeGame.Services
         /// <param name="_settings"></param>
         public static void DrawSnake(PaintEventArgs e, Snake snake, Settings _settings)
         {
-            DrawSnakePiece(e, snake.Head, _settings);
-
-            if (snake.Body.Count > 0)
+            if (snake != null)
             {
-                foreach (var snakeBodyPiece in snake.Body)
+                DrawSnakePiece(e, snake.Head, _settings);
+
+                if (snake.Body.Count > 0)
                 {
-                    DrawSnakePiece(e, snakeBodyPiece, _settings);
+                    foreach (var snakeBodyPiece in snake.Body)
+                    {
+                        DrawSnakePiece(e, snakeBodyPiece, _settings);
+                    }
                 }
             }
         }
 
         public static void DrawFood(PaintEventArgs e, Food food, Settings settings)
         {
-            // Create solid brush.
-            SolidBrush blueBrush = new SolidBrush(Color.Red);
+            if (food != null)
+            {
+                // Create solid brush.
+                SolidBrush blueBrush = new SolidBrush(Color.Red);
 
-            // Create rectangle.
-            Rectangle rect = new Rectangle(food.X, food.Y, settings.PieceSize, settings.PieceSize);
+                // Create rectangle.
+                Rectangle rect = new Rectangle(food.X, food.Y, settings.PieceSize, settings.PieceSize);
 
-            // Fill rectangle to screen.
-            e.Graphics.FillEllipse(blueBrush, rect);
+                // Fill rectangle to screen.
+                e.Graphics.FillEllipse(blueBrush, rect);
+            }
         }
 
         /// <summary>
